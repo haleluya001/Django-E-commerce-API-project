@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head> 
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="py-6 px-6 flex justify-between items-center border-b-2 border-gray-200">
+        <a href="{% url 'core:index' %}" class="text-lg font-semibold text-gray-700">Home</a>
+        <div class="space-x-6">
+            <a href="{% url 'item:new' %}" class="text-lg font-semibold hover:text-gray-700">New item</a>
+            <a href="#" class="ml-4 text-lg font-semibold hover:text-gray-700">Browse</a>
+
+            {% if user.is_authenticated %}
+                <a href="#" class="px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-md hover:bg-teal-600">Inbox</a>
+                <a href="{% url 'dashbord:index' %}" class="px-6 py-3 text-lg font-semibold bg-green-500 text-white rounded-md hover:bg-gray-700">Dashbord</a>
+            {% else %}
+                <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded hover:bg-teal-600">Sign Up</a>
+                <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded hover:bg-gray-700">Log in</a>
+            {% endif %}
+
+            
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="py-10 px-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 px-6 flex justify-between items-center bg-gray-800 text-white">
+        <p>&copy; 2025 My Website. All rights reserved.</p>
+        <div class="w-2/3 pr-10 flex justify-end">
+            <a href="#" class="text-lg font-semibold hover:text-gray-400">Privacy Policy</a>
+            <a href="#" class="ml-4 text-lg font-semibold hover:text-gray-400">Terms of Service</a>
+            <a href="{% url 'core:contact' %}" class="ml-4 text-lg font-semibold hover:text-gray-400">Contact</a>
+        </div>
+    </footer>
+
+</body>
+</html>
