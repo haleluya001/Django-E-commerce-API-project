@@ -44,8 +44,12 @@ INSTALLED_APPS = [
     #local apps
     'core',
     'item',
+    'conversation',
     'dashbord',
+    'crispy_forms',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'  # or 'tailwind' if configured
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Inbox{% endblock %}
+
+{% block content %}
+<h1 class="mb-6 text-3xl font-bold">Inbox</h1>
+
+<div class="space-y-6">
+    {% if conversations %}
+        {% for conversation in conversations %}
+            <a href="{% url 'conversation:detail' conversation.id %}">
+                <div class="p-6 flex bg-gray-100 rounded-xl hover:bg-gray-200 transition">
+                    
+                    {% if conversation.item.image %}
+                        <div class="pr-6">
+                            <img src="{{ conversation.item.image.url }}" class="w-20 h-20 object-cover rounded-xl">
+                        </div>
+                    {% endif %}
+                    
+                    <div class="flex-1">
+                        <p class="mb-2 text-gray-700">
+                            <strong>Item:</strong> {{ conversation.item.title }}
+                        </p>
+                        
+                        <p class="mb-2 text-gray-600">
+                            <strong>Members:</strong>
+                            {% for member in conversation.members.all %}
+                                {% if member != request.user %}
+                                    {{ member.username }}
+                                    {% if not forloop.last %}, {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </p>
+                        
+                        <p class="text-gray-500 text-sm">
+                            Last updated: {{ conversation.modified_at|date:"M d, Y H:i" }}
+                        </p>
+                    </div>
+                    
+                </div>
+            </a>
+        {% endfor %}
+    {% else %}
+        <p class="text-gray-500 text-center mt-6">You have no conversations yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

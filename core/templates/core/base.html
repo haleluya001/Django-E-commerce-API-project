@@ -1,48 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="transition-colors duration-300">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
 </head> 
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
 
     <!-- Navbar -->
-    <nav class="py-6 px-6 flex justify-between items-center border-b-2 border-gray-200">
-        <a href="{% url 'core:index' %}" class="text-lg font-semibold text-gray-700">Home</a>
-        <div class="space-x-6">
-            <a href="{% url 'item:new' %}" class="text-lg font-semibold hover:text-gray-700">New item</a>
-            <a href="#" class="ml-4 text-lg font-semibold hover:text-gray-700">Browse</a>
+    <nav class="py-6 px-6 flex justify-between items-center border-b-2 border-gray-200 dark:border-gray-700">
+        <a href="{% url 'core:index' %}" class="text-lg font-semibold text-gray-700 dark:text-gray-200">Home</a>
+        <div class="flex items-center space-x-4">
+            <a href="{% url 'item:new' %}" class="text-lg font-semibold hover:text-gray-700 dark:hover:text-gray-200">New item</a>
+            <a href="{% url 'item:items' %}" class="ml-4 text-lg font-semibold hover:text-gray-700 dark:hover:text-gray-200">Browse</a>
 
             {% if user.is_authenticated %}
-                <a href="#" class="px-6 py-3 text-lg font-semibold bg-red-500 text-white rounded-md hover:bg-teal-600">Inbox</a>
-                <a href="{% url 'dashbord:index' %}" class="px-6 py-3 text-lg font-semibold bg-green-500 text-white rounded-md hover:bg-gray-700">Dashbord</a>
+                <a href="{% url 'conversation:inbox' %}" class="px-4 py-1 text-lg font-semibold bg-red-500 text-white rounded-md hover:bg-teal-600">Inbox</a>
+                <a href="{% url 'dashbord:index' %}" class="px-4 py-1 text-lg font-semibold bg-green-500 text-white rounded-md hover:bg-gray-700">Dashboard</a>
             {% else %}
                 <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded hover:bg-teal-600">Sign Up</a>
                 <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded hover:bg-gray-700">Log in</a>
             {% endif %}
 
-            
+            <!-- Theme toggle button -->
+            <button id="theme-toggle" class="ml-4 px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition">
+                🌙 / ☀️
+            </button>
         </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="py-10 px-6">
-        {% block content %}
-        {% endblock %}
+    <main class="py-10 px-6 bg-white dark:bg-gray-800  shadow-md transition-colors duration-300">
+        {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="py-6 px-6 flex justify-between items-center bg-gray-800 text-white">
+    <footer class="py-6 px-6 flex justify-between items-center bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
         <p>&copy; 2025 My Website. All rights reserved.</p>
-        <div class="w-2/3 pr-10 flex justify-end">
-            <a href="#" class="text-lg font-semibold hover:text-gray-400">Privacy Policy</a>
-            <a href="#" class="ml-4 text-lg font-semibold hover:text-gray-400">Terms of Service</a>
-            <a href="{% url 'core:contact' %}" class="ml-4 text-lg font-semibold hover:text-gray-400">Contact</a>
+        <div class="w-2/3 pr-10 flex justify-end space-x-4">
+            <a href="#" class="text-lg font-semibold hover:text-gray-500 dark:hover:text-gray-300">Privacy Policy</a>
+            <a href="#" class="text-lg font-semibold hover:text-gray-500 dark:hover:text-gray-300">Terms of Service</a>
+            <a href="{% url 'core:contact' %}" class="text-lg font-semibold hover:text-gray-500 dark:hover:text-gray-300">Contact</a>
         </div>
     </footer>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            if (document.documentElement.classList.contains('dark')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
 
 </body>
 </html>
