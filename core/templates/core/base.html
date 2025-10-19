@@ -1,72 +1,146 @@
 <!DOCTYPE html>
 <html lang="en" class="transition-colors duration-300">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %}</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}My Website{% endblock %}</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class'
-        }
-    </script>
-</head> 
-<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-300">
+  {% load static %}
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    };
+  </script>
 
-    <!-- Navbar -->
-    <nav class="py-6 px-6 flex justify-between items-center border-b-2 border-gray-200 dark:border-gray-700">
-        <a href="{% url 'core:index' %}" class="text-lg font-semibold text-gray-700 dark:text-gray-200">Home</a>
-        <div class="flex items-center space-x-4">
-            <a href="{% url 'item:new' %}" class="text-lg font-semibold hover:text-gray-700 dark:hover:text-gray-200">New item</a>
-            <a href="{% url 'item:items' %}" class="ml-4 text-lg font-semibold hover:text-gray-700 dark:hover:text-gray-200">Browse</a>
+  <style>
+    /* Smooth background & text transition for theme */
+    body {
+      transition: background-color 0.4s, color 0.4s;
+    }
+  </style>
+</head>
 
-            {% if user.is_authenticated %}
-                <a href="{% url 'conversation:inbox' %}" class="px-4 py-1 text-lg font-semibold bg-red-500 text-white rounded-md hover:bg-teal-600">Inbox</a>
-                <a href="{% url 'dashbord:index' %}" class="px-4 py-1 text-lg font-semibold bg-green-500 text-white rounded-md hover:bg-gray-700">Dashboard</a>
-            {% else %}
-                <a href="{% url 'core:signup' %}" class="px-6 py-3 text-lg font-semibold bg-teal-500 text-white rounded hover:bg-teal-600">Sign Up</a>
-                <a href="{% url 'core:login' %}" class="px-6 py-3 text-lg font-semibold bg-gray-500 text-white rounded hover:bg-gray-700">Log in</a>
-            {% endif %}
+<body class="bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-100 min-h-screen flex flex-col">
 
-            <!-- Theme toggle button -->
-            <button id="theme-toggle" class="ml-4 px-2 py-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition">
-                🌙 / ☀️
+  <!-- Navbar -->
+  <nav class="py-4 px-6 md:px-12 flex justify-between items-center bg-white dark:bg-gray-800 shadow sticky top-0 z-50 transition-colors duration-300">
+    <a href="{% url 'core:index' %}" class="text-2xl font-bold text-teal-600 dark:text-teal-400 hover:opacity-80">ShopifyX</a>
+
+    <!-- Desktop Links -->
+    <div class="hidden md:flex items-center space-x-6">
+      <a href="{% url 'item:items' %}" class="font-medium hover:text-teal-600 dark:hover:text-teal-400 transition">Browse</a>
+      
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'item:new' %}" class="font-medium hover:text-teal-600 dark:hover:text-teal-400 transition">Add Item</a>
+
+        <a href="{% url 'conversation:inbox' %}" class="px-3 py-1 bg-rose-500 hover:bg-rose-600 rounded-md font-semibold transition">Inbox</a>
+        <a href="{% url 'dashbord:index' %}" class="px-3 py-1 bg-emerald-500 hover:bg-emerald-600 rounded-md font-semibold transition">Dashboard</a>
+        
+        <!-- Logout -->
+        <form action="{% url 'core:logout' %}" method="post" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-md font-semibold transition">
+                Logout
             </button>
-        </div>
-    </nav>
+        </form>
+      {% else %}
+        <a href="{% url 'core:signup' %}" class="px-3 py-1 rounded-md bg-teal-500 text-white hover:bg-teal-600 font-semibold transition">Sign Up</a>
+        <a href="{% url 'core:login' %}" class="px-3 py-1 rounded-md bg-gray-700 text-white hover:bg-gray-800 font-semibold transition">Login</a>
+      {% endif %}
 
-    <!-- Main Content -->
-    <main class="py-10 px-6 bg-white dark:bg-gray-800  shadow-md transition-colors duration-300">
-        {% block content %}{% endblock %}
-    </main>
+      <!-- Theme Toggle -->
+      <button id="theme-toggle" class="ml-3 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:scale-110 transition">
+        <span id="theme-icon">🌙</span>
+      </button>
+    </div>
 
-    <!-- Footer -->
-    <footer class="py-6 px-6 flex justify-between items-center bg-gray-200 dark:bg-gray-900 text-gray-800 dark:text-gray-100 transition-colors duration-300">
-        <p>&copy; 2025 My Website. All rights reserved.</p>
-        <div class="w-2/3 pr-10 flex justify-end space-x-4">
-            <a href="#" class="text-lg font-semibold hover:text-gray-500 dark:hover:text-gray-300">Privacy Policy</a>
-            <a href="#" class="text-lg font-semibold hover:text-gray-500 dark:hover:text-gray-300">Terms of Service</a>
-            <a href="{% url 'core:contact' %}" class="text-lg font-semibold hover:text-gray-500 dark:hover:text-gray-300">Contact</a>
-        </div>
-    </footer>
+    <!-- Mobile Menu Button -->
+    <button id="menu-toggle" class="md:hidden p-2 bg-gray-200 dark:bg-gray-700 rounded-md hover:opacity-80 transition">
+      ☰
+    </button>
+  </nav>
 
-    <script>
-        const themeToggle = document.getElementById('theme-toggle');
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="hidden flex-col md:hidden bg-white dark:bg-gray-800 px-6 py-4 space-y-3 shadow transition-colors duration-300">
+    <a href="{% url 'item:items' %}" class="block hover:text-teal-600 dark:hover:text-teal-400 transition">Browse</a>
+    <a href="{% url 'item:new' %}" class="block hover:text-teal-600 dark:hover:text-teal-400 transition">Add Item</a>
 
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
+    {% if user.is_authenticated %}
+      <a href="{% url 'conversation:inbox' %}" class="block py-1 px-2 bg-rose-500 hover:bg-rose-600 rounded-md text-white transition">Inbox</a>
+      <a href="{% url 'dashbord:index' %}" class="block py-1 px-2 bg-emerald-500 hover:bg-emerald-600 rounded-md text-white transition">Dashboard</a>
+      <form action="{% url 'core:logout' %}" method="post">
+        {% csrf_token %}
+        <button type="submit" class="w-full py-1 bg-red-500 hover:bg-red-600 rounded-md text-white transition">Logout</button>
+      </form>
+    {% else %}
+      <a href="{% url 'core:signup' %}" class="block py-1 px-2 bg-teal-500 hover:bg-teal-600 rounded-md text-white transition">Sign Up</a>
+      <a href="{% url 'core:login' %}" class="block py-1 px-2 bg-gray-700 hover:bg-gray-800 rounded-md text-white transition">Login</a>
+    {% endif %}
 
-        themeToggle.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            if (document.documentElement.classList.contains('dark')) {
-                localStorage.setItem('theme', 'dark');
-            } else {
-                localStorage.setItem('theme', 'light');
-            }
-        });
-    </script>
+    <!-- Theme Toggle -->
+    <button id="mobile-theme-toggle" class="mt-2 py-1 px-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:scale-105 transition">
+      🌙 / ☀️
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <main class="flex-1 py-10 px-6 transition-colors duration-300">
+    <div class="max-w-7xl mx-auto">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-6 px-8 bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-300 mt-auto transition-colors duration-300">
+    <div class="flex justify-between items-center">
+      <p>&copy; 2025 ShopifyX. All rights reserved.</p>
+      <div class="flex space-x-4">
+        <a href="#" class="hover:text-teal-500">Privacy</a>
+        <a href="#" class="hover:text-teal-500">Terms</a>
+        <a href="{% url 'core:contact' %}" class="hover:text-teal-500">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    const html = document.documentElement;
+
+    // Desktop Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+
+    function updateThemeIcon() {
+      themeIcon.textContent = html.classList.contains('dark') ? '☀️' : '🌙';
+    }
+
+    // Initialize theme
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      html.classList.add('dark');
+    } else {
+      html.classList.remove('dark');
+    }
+    updateThemeIcon();
+
+    function toggleTheme() {
+      html.classList.toggle('dark');
+      localStorage.theme = html.classList.contains('dark') ? 'dark' : 'light';
+      updateThemeIcon();
+    }
+
+    themeToggle.addEventListener('click', toggleTheme);
+    mobileThemeToggle.addEventListener('click', toggleTheme);
+
+    // Mobile Menu Toggle
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+    });
+  </script>
 
 </body>
 </html>

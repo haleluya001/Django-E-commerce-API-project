@@ -4,171 +4,96 @@
 {% block title %}Conversation about {{ conversation.item.name }}{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto mt-6 p-6 bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-xl flex flex-col space-y-6">
+<div class="max-w-4xl mx-auto mt-8 p-8 bg-white dark:bg-gray-800 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-700 flex flex-col space-y-8">
 
-    <!-- Header -->
-    <div class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 shadow rounded-xl">
-        <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Conversation about "{{ conversation.item.name }}"</h1>
-        <span class="text-gray-500 dark:text-gray-400 text-sm">Started: {{ conversation.created_at|date:"M d, Y" }}</span>
+    <div class="p-5 bg-gray-50 dark:bg-gray-700 rounded-2xl shadow-lg border-b-4 border-blue-500/70 dark:border-blue-500/50">
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-gray-50 tracking-tight">
+            Conversation about <span class="text-blue-600 dark:text-blue-400">"{{ conversation.item.name }}"</span>
+        </h1>
+        <p class="text-sm text-gray-500 dark:text-gray-300 mt-1">
+            Started: {{ conversation.created_at|date:"M d, Y" }}
+        </p>
     </div>
 
-    <!-- Chat messages -->
-    <div id="chat-container" class="flex flex-col space-y-4 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-inner overflow-y-auto border border-gray-200 dark:border-gray-700" style="height: 70vh;">
-        {% if conversation.messages.exists %}
-            {% for message in conversation.messages.all %}
-                <div class="flex {% if message.created_by == request.user %}justify-end{% else %}justify-start{% endif %} message-item">
-                    <div class="max-w-[70%] p-3 rounded-2xl shadow-md transition transform hover:scale-[1.01]
-                        {% if message.created_by == request.user %}bg-blue-500 text-white rounded-br-none{% else %}bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-200 dark:border-gray-600{% endif %}">
-
-                        <p class="text-sm font-semibold mb-1
-                            {% if message.created_by == request.user %}text-blue-100{% else %}text-gray-600 dark:text-gray-300{% endif %}">
+    <div class="flex flex-col space-y-5 p-6 bg-gray-100 dark:bg-gray-900 rounded-2xl shadow-inner border-2 border-gray-200 dark:border-gray-700" style="height: 70vh; overflow-y: auto;">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="flex {% if message.created_by == request.user %}justify-end{% else %}justify-start{% endif %}">
+                    <div class="max-w-[75%] p-4 rounded-3xl transition duration-300 ease-in-out transform hover:scale-[1.01]
+                        {% if message.created_by == request.user %}
+                            bg-blue-600 text-white rounded-br-lg shadow-xl shadow-blue-500/30
+                        {% else %}
+                            bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-lg border border-gray-300 dark:border-gray-600 shadow-md
+                        {% endif %}">
+                        
+                        <p class="text-xs font-bold mb-1 opacity-90
+                            {% if message.created_by == request.user %}
+                                text-blue-100
+                            {% else %}
+                                text-gray-600 dark:text-gray-300
+                            {% endif %}">
                             {{ message.created_by.username }}
                         </p>
-                        <p class="break-words whitespace-pre-wrap">{{ message.content }}</p>
-                        <span class="text-xs mt-1 block
-                            {% if message.created_by == request.user %}text-blue-200 text-right{% else %}text-gray-500 dark:text-gray-400 text-left{% endif %}">
+                        
+                        <p class="break-words whitespace-pre-wrap leading-relaxed">{{ message.content }}</p>
+                        
+                        <span class="text-[0.65rem] mt-2 block opacity-70
+                            {% if message.created_by == request.user %}
+                                text-blue-200 text-right
+                            {% else %}
+                                text-gray-500 dark:text-gray-400 text-left
+                            {% endif %}">
                             {{ message.created_at|date:"H:i" }}
                         </span>
                     </div>
                 </div>
             {% endfor %}
         {% else %}
-            <p id="empty-message" class="text-gray-500 dark:text-gray-400 text-center mt-4">No messages yet. Start the conversation below!</p>
+            <div class="flex items-center justify-center h-full">
+                <p class="text-lg text-gray-400 dark:text-gray-500 font-medium">
+                    <i class="fas fa-comment-dots mr-2"></i> No messages yet. Start the conversation below!
+                </p>
+            </div>
         {% endif %}
     </div>
 
-    <!-- Message input (Real-time enabled) -->
-    <form id="message-form" class="flex items-end space-x-4">
+    <form method="post" class="flex items-end space-x-4 pt-4">
         {% csrf_token %}
-        <textarea id="message-input" name="message" placeholder="Type your message here..." rows="1"
-            class="flex-1 px-5 py-3 border-2 border-gray-300 dark:border-gray-600 rounded-xl resize-none
-                   focus:outline-none focus:ring-4 focus:ring-blue-200 focus:border-blue-500
-                   bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100
-                   transition-all duration-300 shadow-inner"
-            required aria-label="Message input field"></textarea>
-
-        <button type="submit" class="py-3 px-6 text-lg bg-blue-500 hover:bg-blue-600 rounded-xl text-white font-semibold shadow-lg transition transform hover:scale-105">
+        <div class="flex-grow">
+            {{ form.content }}
+        </div>
+        <button type="submit" class="py-3 px-8 text-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-2xl text-white font-bold shadow-xl transition duration-150 ease-in-out transform hover:scale-[1.02] disabled:opacity-50">
             Send
         </button>
     </form>
+    
+    <style>
+        /* Target the textarea rendered by Django forms */
+        #id_content { 
+            width: 100%;
+            padding: 1rem;
+            border-radius: 1rem; /* rounded-2xl */
+            border: 2px solid #e5e7eb; /* border-gray-200 */
+            resize: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05); /* shadow-md */
+            background-color: #f9fafb; /* bg-gray-50 */
+            transition: all 0.2s ease-in-out;
+        }
+
+        #id_content:focus {
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* focus:ring-blue-500 */
+            outline: none;
+            background-color: #ffffff;
+        }
+
+        /* Dark mode styles for the textarea */
+        .dark #id_content {
+            background-color: #374151; /* dark:bg-gray-700 */
+            border-color: #4b5563; /* dark:border-gray-600 */
+            color: #f9fafb; /* dark:text-gray-50 */
+        }
+    </style>
 
 </div>
-
-<script>
-    const chatContainer = document.getElementById('chat-container');
-    const messageForm = document.getElementById('message-form');
-    const messageInput = document.getElementById('message-input');
-    const emptyMessage = document.getElementById('empty-message');
-
-    // Get Django context variables
-    // IMPORTANT: conversation.id must be available in the template context
-    const conversationId = {{ conversation.id }};
-    const currentUsername = "{{ request.user.username }}";
-
-    // Utility function to scroll to the bottom of the chat container
-    const scrollToBottom = () => {
-        if(chatContainer) {
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    };
-
-    // 1. Initial scroll to bottom on page load
-    window.onload = scrollToBottom;
-
-    // 2. WebSocket Connection (Ensure Django Channels is set up on the backend)
-    const chatSocket = new WebSocket(
-        'ws://'
-        + window.location.host
-        + '/ws/chat/' // Verify this is your WebSocket URL pattern
-        + conversationId
-        + '/'
-    );
-    
-    // 3. Helper function to render a message bubble
-    const renderMessage = (message, username, created_at, isCurrentUser) => {
-        // Remove the "No messages yet" placeholder if a message arrives
-        if (emptyMessage && chatContainer.querySelectorAll('.message-item').length === 0) {
-            emptyMessage.style.display = 'none';
-        }
-
-        // Define CSS classes based on sender, matching the Django template's styles
-        const bubbleClasses = isCurrentUser
-            ? "bg-blue-500 text-white rounded-br-none"
-            : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 rounded-bl-none border border-gray-200 dark:border-gray-600";
-        
-        const justifyClasses = isCurrentUser ? "justify-end" : "justify-start";
-        
-        const usernameColor = isCurrentUser ? "text-blue-100" : "text-gray-600 dark:text-gray-300";
-        const timeClasses = isCurrentUser ? `text-blue-200 text-right` : `text-gray-500 dark:text-gray-400 text-left`;
-
-        // Create the message HTML structure
-        const messageHtml = `
-            <div class="flex ${justifyClasses} message-item">
-                <div class="max-w-[70%] p-3 rounded-2xl shadow-md transition transform hover:scale-[1.01] ${bubbleClasses}">
-                    <p class="text-sm font-semibold mb-1 ${usernameColor}">${username}</p>
-                    <p class="break-words whitespace-pre-wrap">${message.replace(/\n/g, '<br>')}</p>
-                    <span class="text-xs mt-1 block ${timeClasses}">
-                        ${created_at}
-                    </span>
-                </div>
-            </div>
-        `;
-
-        // Append to chat container and scroll
-        chatContainer.insertAdjacentHTML('beforeend', messageHtml);
-        scrollToBottom();
-    }
-
-
-    // 4. Handle incoming messages (Real-time rendering from server broadcast)
-    chatSocket.onmessage = function(e) {
-        const data = JSON.parse(e.data);
-        const message = data.message;
-        const username = data.username;
-        const created_at = data.created_at; // Expecting a formatted time string (e.g., '14:30')
-        
-        const isCurrentUser = (username === currentUsername);
-        
-        // Render the received message
-        renderMessage(message, username, created_at, isCurrentUser);
-    };
-
-
-    // 5. Handle form submission (Send message via WebSocket & Optimistic Render)
-    messageForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const message = messageInput.value.trim();
-        if (message === '') return; // Don't send empty messages
-
-        // Send message to WebSocket
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }));
-
-        // --- OPTIMISTIC RENDER: Immediately show the message the user just sent ---
-        const now = new Date();
-        const created_at_local = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-        
-        renderMessage(message, currentUsername, created_at_local, true); // true for isCurrentUser
-
-        // Clear the input field and reset height
-        messageInput.value = '';
-        messageInput.style.height = 'auto'; // Reset the height if it expanded
-
-        // Optional: Re-focus on input for quick reply
-        messageInput.focus();
-    });
-
-    chatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-    };
-
-    // Optional: Auto-expand textarea height as user types
-    messageInput.addEventListener('input', function() {
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    });
-
-</script>
 {% endblock %}

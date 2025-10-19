@@ -1,47 +1,60 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}Inbox{% endblock %}
 
 {% block content %}
-<h1 class="mb-6 text-3xl font-bold">Inbox</h1>
+<div class="max-w-6xl mx-auto py-10 px-6">
 
-<div class="space-y-6">
+    <h1 class="mb-8 text-4xl font-bold text-gray-900 dark:text-gray-100 text-center">Inbox</h1>
+
     {% if conversations %}
-        {% for conversation in conversations %}
-            <a href="{% url 'conversation:detail' conversation.id %}">
-                <div class="p-6 flex bg-gray-100 rounded-xl hover:bg-gray-200 transition">
-                    
-                    {% if conversation.item.image %}
-                        <div class="pr-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for conversation in conversations %}
+                <a href="{% url 'conversation:detail' conversation.id %}" class="block bg-white dark:bg-gray-800 rounded-2xl shadow hover:shadow-xl transition transform hover:-translate-y-1 duration-300 overflow-hidden">
+
+                    <div class="flex items-center p-4 space-x-4">
+                        {% if conversation.item.image %}
                             <img src="{{ conversation.item.image.url }}" class="w-20 h-20 object-cover rounded-xl">
+                        {% else %}
+                            <img src="{% static 'images/default.png' %}" class="w-20 h-20 object-cover rounded-xl">
+                        {% endif %}
+
+                        <div class="flex-1">
+                            <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                                {{ conversation.item.name }}
+                            </p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
+                                Members: 
+                                {% for member in conversation.members.all %}
+                                    {% if member != request.user %}
+                                        {{ member.username }}{% if not forloop.last %}, {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </p>
+                            <p class="text-gray-400 dark:text-gray-500 text-xs mt-2">
+                                Last updated: {{ conversation.modified_at|date:"M d, Y H:i" }}
+                            </p>
                         </div>
-                    {% endif %}
-                    
-                    <div class="flex-1">
-                        <p class="mb-2 text-gray-700">
-                            <strong>Item:</strong> {{ conversation.item.title }}
-                        </p>
-                        
-                        <p class="mb-2 text-gray-600">
-                            <strong>Members:</strong>
-                            {% for member in conversation.members.all %}
-                                {% if member != request.user %}
-                                    {{ member.username }}
-                                    {% if not forloop.last %}, {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                        </p>
-                        
-                        <p class="text-gray-500 text-sm">
-                            Last updated: {{ conversation.modified_at|date:"M d, Y H:i" }}
-                        </p>
                     </div>
-                    
-                </div>
-            </a>
-        {% endfor %}
+
+                    <!-- Last message preview -->
+                    {% with last_message=conversation.messages.last %}
+                        {% if last_message %}
+                            <div class="px-4 pb-4 text-gray-600 dark:text-gray-300 text-sm truncate">
+                                <strong>{{ last_message.created_by.username }}:</strong> {{ last_message.content }}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+
+                </a>
+            {% endfor %}
+        </div>
     {% else %}
-        <p class="text-gray-500 text-center mt-6">You have no conversations yet.</p>
+        <p class="text-gray-500 dark:text-gray-400 text-center mt-12 text-lg">
+            You have no conversations yet. Start a new conversation to connect with sellers!
+        </p>
     {% endif %}
+
 </div>
 {% endblock %}
