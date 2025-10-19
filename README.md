@@ -19,16 +19,20 @@ The architecture follows a modular, monolithic structure, with distinct Django a
 Django-E-commerce-API-project/
 │
 ├─ config/ # Main project settings, root URLs, and application environment config.
-├─ core/ # Custom User model, base permissions, and core authentication logic.
-├─ item/ # The Product Catalog: Models/Views for Product, Category, and Inventory.
-├─ conversation/ # Dedicated functionality for real-time chat between buyers and sellers (Scalability TBD).
-├─ dashboard/ # Administrative API endpoints (restricted access for staff/management tools).
-├─ media/ # Storage location for user-uploaded assets (product images).
-├─ manage.py # Django's management utility.
-└─ requirements.txt # Project dependencies list.
 
-pgsql
-Copy code
+├─ core/ # Custom User model, base permissions, and core authentication logic.
+
+├─ item/ # The Product Catalog: Models/Views for Product, Category, and Inventory.
+
+├─ conversation/ # Dedicated functionality for real-time chat between buyers and sellers (Scalability TBD).
+
+├─ dashboard/ # Administrative API endpoints (restricted access for staff/management tools).
+
+├─ media/ # Storage location for user-uploaded assets (product images).
+
+├─ manage.py # Django's management utility.
+
+└─ requirements.txt # Project dependencies list.
 
 ---
 
