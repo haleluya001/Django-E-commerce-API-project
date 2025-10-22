@@ -94,21 +94,21 @@ pip install pillow
 
 3. Database Setup and Migration
 
-Apply the database schema changes:
+# Apply the database schema changes:
 
 python manage.py migrate
 
 
 4. Create an Administrator User
 
-Create a superuser to access protected endpoints and the Django Admin:
+# Create a superuser to access protected endpoints and the Django Admin:
 
 python manage.py createsuperuser
 
 
 5. Run the Server
 
-Start the local development server:
+# Start the local development server:
 
 python manage.py runserver
 
