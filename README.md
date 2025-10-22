@@ -110,15 +110,15 @@ python manage.py createsuperuser
 
 Before running the server, you need to add initial data. Using the superuser credentials created above:
 
-Visit the Django Admin page at http://127.0.0.1:8000/admin/.
+1. Visit the Django Admin page at http://127.0.0.1:8000/admin/.
 
-Log in with your superuser credentials.
+2. Log in with your superuser credentials.
 
-Navigate to the item section and add at least one or two Category.
+3. Navigate to the item section and add at least one or two Category.
 
-Next, add a few Products and assign them to the categories you just created.
+4. Next, add a few Products and assign them to the categories you just created.
 
-This step ensures your API has data to return when accessing the public endpoints.
+5. This step ensures your API has data to return when accessing the public endpoints.
 
 
 The API will now be accessible at http://127.0.0.1:8000/.
