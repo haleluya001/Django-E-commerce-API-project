@@ -129,10 +129,17 @@ Optimizing API Performance: Implement caching and query optimization strategies 
 
 Django-E-commerce-API-project/
 │
+
 ├─ config/           # Project settings and URL routing
+
 ├─ core/             # User and Authentication logic
+
 ├─ dashboard/        # Administrative interfaces / logic
+
 ├─ item/             # Product and Category management application
+
 ├─ media/            # Stores uploaded product images (ignored by Git)
+
 ├─ manage.py
+
 └─ requirements.txt
