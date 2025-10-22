@@ -1,108 +1,138 @@
-# 🎓 Capstone Project: Enterprise E-commerce REST API Backend
+Django E-commerce Core API (ALX Capstone Project)
 
-## 1. Project Overview & Goal
-This project implements a complete, headless backend for an enterprise-level e-commerce application. The core goal is to provide a highly scalable, secure, and maintainable RESTful API that can be consumed by multiple frontend clients (web, mobile, third-party services).
+🎯 Project Overview
 
-The API is built using the robust Django framework and the powerful Django REST Framework (DRF), ensuring rapid development and adherence to modern web standards.
+This is a robust, secure, and scalable RESTful API designed to serve as the back-end foundation (the "engine room") for a modern e-commerce platform. Built on industry-standard frameworks, the API handles all core business logic, including product catalog management, administrative access control, and user authentication, ensuring a reliable data layer for any client (web, mobile, or third-party service).
 
-**Key Responsibilities:**
-- Securely manage user accounts and access tokens.
-- Provide comprehensive product catalog and inventory management endpoints.
-- Handle stateful logic for shopping carts and transactional order processing.
+The primary goal is to provide a clean separation of concerns, delivering a secure, JSON-based API that is deployment-ready.
 
----
+✨ Core Features (Completed)
 
-## 2. Core Architecture and Data Flow
-The architecture follows a modular, monolithic structure, with distinct Django applications managing specific business domains.
+The API currently implements the essential functionalities for catalog and administrative management:
 
-### 2.1 Project Structure
+Secure User Authentication: Implements token-based authentication (auth/token/login/) to secure all administrative endpoints.
+
+Categories Management: CRUD (Create, Read, Update, Delete) operations for product categorization.
+
+Endpoint: /api/v1/items/categories/
+
+Product Management: Full CRUD operations for detailed product information (name, price, category, images, etc.).
+
+Endpoint: /api/v1/items/products/
+
+Separated Data Logic: Clear division of features into dedicated Django applications (item, core, dashboard).
+
+Media Handling: Configuration to handle product image uploads and storage.
+
+🛠️ Tech Stack and Dependencies
+
+This project leverages modern Python and Django best practices.
+
+Component
+
+Technology
+
+Role
+
+Backend Framework
+
+Python 3.x, Django 5.x
+
+Core application logic and ORM.
+
+API
+
+Django REST Framework (DRF)
+
+Handling serialization, views, and routing for RESTful endpoints.
+
+Authentication
+
+Django Rest Auth / Djoser (or similar)
+
+Secure token-based user authentication.
+
+Database (Development)
+
+SQLite 3
+
+Lightweight database for local development. (Easily swapped for PostgreSQL/MySQL in production.)
+
+🚀 Installation and Setup
+
+Follow these steps to get a local copy of the project running on your machine.
+
+Prerequisites
+
+Python 3.x
+
+pip (Python package installer)
+
+1. Clone the Repository
+
+git clone [https://github.com/haleluya001/Django-E-commerce-API-project.git](https://github.com/haleluya001/Django-E-commerce-API-project.git)
+cd Django-E-commerce-API-project
+
+
+2. Configure Environment
+
+Create a virtual environment (recommended) and install dependencies.
+
+# Create and activate virtual environment
+python -m venv env
+source env/bin/activate 
+
+# Install django on your virtual environment
+pip install django
+
+#Install crispy_forms
+pip install django-crispy-forms 
+
+#Install Pillow 
+pip install pillow 
+
+
+3. Database Setup and Migration
+
+Apply the database schema changes:
+
+python manage.py migrate
+
+
+4. Create an Administrator User
+
+Create a superuser to access protected endpoints and the Django Admin:
+
+python manage.py createsuperuser
+
+
+5. Run the Server
+
+Start the local development server:
+
+python manage.py runserver
+
+
+The API will now be accessible at http://127.0.0.1:8000/.
+
+⏭️ Next Steps and Future Work
+
+The immediate focus for future development will be to complete the full e-commerce lifecycle:
+
+Shopping Cart and Order Logic: Implement models and views for adding items to a cart, calculating totals, and finalizing orders.
+
+Payment Service Integration: Connect to a third-party payment gateway (e.g., Stripe, PayPal) for processing transactions.
+
+Optimizing API Performance: Implement caching and query optimization strategies for high traffic.
+
+📁 Project Structure
+
 Django-E-commerce-API-project/
 │
-├─ config/ # Main project settings, root URLs, and application environment config.
-
-├─ core/ # Custom User model, base permissions, and core authentication logic.
-
-├─ item/ # The Product Catalog: Models/Views for Product, Category, and Inventory.
-
-├─ conversation/ # Dedicated functionality for real-time chat between buyers and sellers (Scalability TBD).
-
-├─ dashboard/ # Administrative API endpoints (restricted access for staff/management tools).
-
-├─ media/ # Storage location for user-uploaded assets (product images).
-
-├─ manage.py # Django's management utility.
-
-└─ requirements.txt # Project dependencies list.
-
----
-
-## 3. Technology Stack (Backend)
-
-| Technology | Version/Standard | Purpose in Project |
-|------------|-----------------|------------------|
-| Python/Django | Python 3.x, Django 5.x | Core application logic, ORM, and template-less routing |
-| Django REST Framework (DRF) | Latest | Serialization, declarative views, and robust request handling |
-| DRF Simple JWT | Latest | Secure, stateless, token-based authentication (Access/Refresh Tokens) |
-| SQLite3 | Default | Local development and rapid prototyping (ready for PostgreSQL/MySQL migration) |
-| Pillow | Latest | Image manipulation and validation for product media uploads |
-| python-decouple | Latest | Secure separation of secrets and configuration parameters from code |
-| gunicorn, whitenoise | Latest | Production WSGI server and efficient serving of static/media files |
-
----
-
-## 4. Key API Endpoints
-All API endpoints are prefixed with `/api/v1/`.
-
-| Domain | Endpoint | Method(s) | Description |
-|--------|---------|-----------|-------------|
-| Auth | `/api/v1/users/register/` | POST | Create a new user account (public) |
-| Auth | `/api/v1/token/` | POST | Exchange username/password for JWT tokens (public) |
-| Auth | `/api/v1/token/refresh/` | POST | Obtain a new Access Token using the Refresh Token (public) |
-| Catalog | `/api/v1/products/` | GET | List all available products (supports filtering/search) (public) |
-| Catalog | `/api/v1/products/{id}/` | GET | Retrieve details for a specific product (public) |
-| Cart | `/api/v1/cart/` | GET, POST | View or create a new cart entry (required) |
-| Cart | `/api/v1/cart/{item_id}/` | PUT, DELETE | Update quantity or remove an item from the cart (required) |
-| Order | `/api/v1/orders/` | POST | Finalize checkout and create a new order from the cart (required) |
-| Order | `/api/v1/orders/{id}/` | GET | Retrieve a specific order's details (required) |
-
----
-
-## 5. Setup and Installation Guide
-
-### 5.1 Clone the Repository
-```bash
-git clone https://github.com/haleluya001/Django-E-commerce-API-project.git
-cd Django-E-commerce-API-project
-5.2 Set up a Virtual Environment
-bash
-Copy code
-python -m venv env
-# Linux/Mac:
-source env/bin/activate
-# Windows:
-.\env\Scripts\activate
-5.3 Install Dependencies
-bash
-Copy code
-pip install -r requirements.txt
-5.4 Configure Environment Variables
-Create a .env file in the root directory:
-
-env
-Copy code
-SECRET_KEY='YOUR_LONG_RANDOM_SECRET_KEY_HERE'
-DEBUG=True
-ALLOWED_HOSTS='*'
-# DATABASE_URL=... (for production)
-5.5 Database Initialization
-bash
-Copy code
-python manage.py migrate
-5.6 Create Administrative User
-bash
-Copy code
-python manage.py createsuperuser
-5.7 Run the Development Server
-bash
-Copy code
-python manage.py runserver
+├─ config/           # Project settings and URL routing
+├─ core/             # User and Authentication logic
+├─ dashboard/        # Administrative interfaces / logic
+├─ item/             # Product and Category management application
+├─ media/            # Stores uploaded product images (ignored by Git)
+├─ manage.py
+└─ requirements.txt
