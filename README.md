@@ -85,10 +85,10 @@ source env/bin/activate
 # Install django on your virtual environment
 pip install django
 
-#Install crispy_forms
+# Install crispy_forms
 pip install django-crispy-forms 
 
-#Install Pillow 
+# Install Pillow 
 pip install pillow 
 
 
