@@ -142,4 +142,4 @@ Django-E-commerce-API-project/
 
 ├─ manage.py
 
-└─ requirements.txt
+
