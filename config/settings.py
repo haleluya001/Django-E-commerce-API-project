@@ -14,7 +14,8 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-w+s6s)*%w@y+p)
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 # Allow all hosts for now (Render will add its hostname automatically)
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['django-e-commerce-api-project-3.onrender.com']
+
 
 # Redirect URLs
 LOGIN_URL = 'core:login'
